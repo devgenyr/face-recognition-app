@@ -10,7 +10,7 @@ import './App.css';
 const particlesOptions = {
 	particles: {
 		number: {
-			value: 80,
+			value: 90,
 			density: {
 				enable: true,
 				value_area: 800
@@ -32,21 +32,14 @@ const particlesOptions = {
 		},
 		modes: {
 			grab: {
-				distance: 400,
+				distance: 300,
 				line_linked: {
-					opacity: 1
+					opacity: 0.8
 				}
 			},
-			bubble: {
-				distance: 400,
-				size: 40,
-				duration: 2,
-				opacity: 8,
-				speed: 3
-			},
 			repulse: {
-				distance: 200,
-				duration: 0.4
+				distance: 275,
+				duration: 0.2
 			},
 			push: {
 				particles_nb: 4
