@@ -8,6 +8,7 @@ import Navigation from './components/Navigation/Navigation';
 import Logo from './components/Logo/Logo';
 import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
 import Rank from './components/Rank/Rank';
+import FaceRecognition from './components/FaceRecognition/FaceRecognition';
 import './App.css';
 
 const app = new Clarifai.App({
@@ -64,18 +65,23 @@ class App extends Component {
 		super();
 		this.state = {
 			input: '',
+			imageUrl: ''
 		}
 	}
 
 	onInputChange = ( event ) => {
-		console.log( event.target.value );
+		this.setState( { input: event.target.value } );
 	};
 
 	onButtonSubmit = () => {
-		app.models.predict( "a403429f2ddf4b49b307e318f00e528b", "https://samples.clarifai.com/face-det.jpg" ).then(
+		this.setState( { imageUrl: this.state.input } );
+		app.models.predict(
+			Clarifai.FACE_DETECT_MODEL,
+			this.state.input )
+		.then(
 			function(response) {
 				// do something with response
-				console.log( response );
+				console.log( response.outputs[0].data.regions[0].region_info.bounding_box );
 			},
 			function(err) {
 				// there was an error
@@ -95,9 +101,7 @@ class App extends Component {
 					onInputChange={ this.onInputChange }
 					onButtonSubmit={ this.onButtonSubmit }
 				/>
-				{/*
-				<FaceRecognition />
-				*/}
+				<FaceRecognition imageUrl={ this.state.imageUrl } />
 				{/*
 				<div>Icons made by <a href="https://www.freepik.com/" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
 				*/}
