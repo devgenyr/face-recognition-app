@@ -65,9 +65,28 @@ class App extends Component {
 		super();
 		this.state = {
 			input: '',
-			imageUrl: ''
+			imageUrl: '',
+			box: {}
 		}
 	}
+
+	calculateFaceLocation = ( data ) => {
+		const clarifaiFace = data.outputs[0].data.regions[0].region_info.bounding_box;
+		const image = document.getElementById( 'input-image' );
+		const imageWidth = Number( image.width );
+		const imageHeight = Number( image.height );
+		return {
+			topRow: clarifaiFace.top_row * imageHeight,
+			leftCol: clarifaiFace.left_col * imageWidth,
+			bottomRow: imageHeight - ( clarifaiFace.bottom_row * imageHeight ),
+			rightCol: imageWidth - ( clarifaiFace.right_col * imageWidth )
+		}
+	};
+
+	displayFaceBox = ( box ) => {
+		console.log( box );
+		this.setState( { box } );
+	};
 
 	onInputChange = ( event ) => {
 		this.setState( { input: event.target.value } );
@@ -78,15 +97,8 @@ class App extends Component {
 		app.models.predict(
 			Clarifai.FACE_DETECT_MODEL,
 			this.state.input )
-		.then(
-			function(response) {
-				// do something with response
-				console.log( response.outputs[0].data.regions[0].region_info.bounding_box );
-			},
-			function(err) {
-				// there was an error
-			}
-		);
+				.then( response => this.displayFaceBox( this.calculateFaceLocation( response ) ) )
+				.catch( err => console.log( err ) );
 		console.log('click');
 	};
 
@@ -101,7 +113,7 @@ class App extends Component {
 					onInputChange={ this.onInputChange }
 					onButtonSubmit={ this.onButtonSubmit }
 				/>
-				<FaceRecognition imageUrl={ this.state.imageUrl } />
+				<FaceRecognition box={ this.state.box } imageUrl={ this.state.imageUrl } />
 				{/*
 				<div>Icons made by <a href="https://www.freepik.com/" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
 				*/}

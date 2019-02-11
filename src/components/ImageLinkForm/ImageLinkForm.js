@@ -8,7 +8,7 @@ const ImageLinkForm = ( { onInputChange, onButtonSubmit } ) => {
 				{'This Magic App will detect faces in your pictures. Give it a try!'}
 			</p>
 			<div className={'center'}>
-				<div className={'form center br3 shadow-5'}>
+				<div className={'form center br3 shadow-1'}>
 					<input
 						className={'f4 pa2 w-70 center'}
 						type="text"
