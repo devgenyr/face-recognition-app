@@ -5,6 +5,7 @@ import Clarifai from 'clarifai';
 import clarifaiApiKey from './secrets';
 
 import Navigation from './components/Navigation/Navigation';
+import Signin from './components/Signin/Signin';
 import Logo from './components/Logo/Logo';
 import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
 import Rank from './components/Rank/Rank';
@@ -66,7 +67,8 @@ class App extends Component {
 		this.state = {
 			input: '',
 			imageUrl: '',
-			box: {}
+			box: {},
+			route: 'signin'
 		}
 	}
 
@@ -102,18 +104,28 @@ class App extends Component {
 		console.log('click');
 	};
 
+	onRouteChange = ( route ) => {
+		this.setState( { route: route } );
+	};
+
 	render() {
 		return (
 			<div className="App">
 				<Particles className={'particles'} params={ particlesOptions } />
-				<Navigation />
-				<Logo />
-				<Rank />
-				<ImageLinkForm
-					onInputChange={ this.onInputChange }
-					onButtonSubmit={ this.onButtonSubmit }
-				/>
-				<FaceRecognition box={ this.state.box } imageUrl={ this.state.imageUrl } />
+				<Navigation onRouteChange={ this.onRouteChange } />
+				{
+					this.state.route === 'signin' ?
+						<Signin onRouteChange={ this.onRouteChange } /> :
+						<div>
+							<Logo />
+							<Rank />
+							<ImageLinkForm
+								onInputChange={ this.onInputChange }
+								onButtonSubmit={ this.onButtonSubmit }
+							/>
+							<FaceRecognition box={ this.state.box } imageUrl={ this.state.imageUrl } />
+						</div>
+				}
 				{/*
 				<div>Icons made by <a href="https://www.freepik.com/" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
 				*/}
