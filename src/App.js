@@ -6,6 +6,7 @@ import clarifaiApiKey from './secrets';
 
 import Navigation from './components/Navigation/Navigation';
 import Signin from './components/Signin/Signin';
+import Register from './components/Register/Register';
 import Logo from './components/Logo/Logo';
 import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
 import Rank from './components/Rank/Rank';
@@ -68,7 +69,8 @@ class App extends Component {
 			input: '',
 			imageUrl: '',
 			box: {},
-			route: 'signin'
+			route: 'signin',
+			isSignedIn: false
 		}
 	}
 
@@ -86,7 +88,7 @@ class App extends Component {
 	};
 
 	displayFaceBox = ( box ) => {
-		console.log( box );
+		// console.log( box );
 		this.setState( { box } );
 	};
 
@@ -105,26 +107,39 @@ class App extends Component {
 	};
 
 	onRouteChange = ( route ) => {
+		if ( route === 'signout' ) {
+			this.setState( { isSignedIn: false } );
+		} else if ( route === 'home' ) {
+			this.setState( { isSignedIn: true } );
+		}
 		this.setState( { route: route } );
 	};
 
 	render() {
+		const { isSignedIn, imageUrl, route, box } = this.state;
 		return (
 			<div className="App">
 				<Particles className={'particles'} params={ particlesOptions } />
-				<Navigation onRouteChange={ this.onRouteChange } />
+				<Navigation isSignedIn={ isSignedIn } onRouteChange={ this.onRouteChange } />
 				{
-					this.state.route === 'signin' ?
-						<Signin onRouteChange={ this.onRouteChange } /> :
+					route === 'home' ?
 						<div>
 							<Logo />
 							<Rank />
 							<ImageLinkForm
-								onInputChange={ this.onInputChange }
-								onButtonSubmit={ this.onButtonSubmit }
+									onInputChange={ this.onInputChange }
+									onButtonSubmit={ this.onButtonSubmit }
 							/>
-							<FaceRecognition box={ this.state.box } imageUrl={ this.state.imageUrl } />
+							<FaceRecognition box={ box } imageUrl={ imageUrl } />
 						</div>
+					:
+					(
+						route === 'signin' ?
+							<Signin onRouteChange={ this.onRouteChange } />
+							:
+							<Register onRouteChange={ this.onRouteChange } />
+					)
+
 				}
 				{/*
 				<div>Icons made by <a href="https://www.freepik.com/" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
